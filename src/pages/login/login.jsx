@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd'
+import { Form, Icon, Input, Button, message } from 'antd'
+import {Redirect} from 'react-router-dom'
 
+import memoryUtils from '../../utils/memoryUtils'
 import { reqLogin } from '../../api'
 import logo from './images/logo.png'
 import './login.less'
@@ -26,7 +28,22 @@ class Login extends Component {
       if (!error) { // 验证通过
         // 发登陆的ajax
         const result = await reqLogin(username, password)
-        console.log('result', result)
+        // console.log('result', result)
+        if (result.status===0) { // 请求登陆成功
+          // 得到返回的用户信息对象
+          const user = result.data  // [object Object]
+
+          // 保存user (local/memory)
+          localStorage.setItem('user_key', JSON.stringify(user))
+          memoryUtils.user = user
+
+          // 跳转到admin路由
+          this.props.history.replace('/')
+
+        } else { // 请求登陆失败
+          message.error(result.msg)
+        }
+        
       } else {
         console.log('前台表单验证失败')
       }
@@ -58,6 +75,14 @@ class Login extends Component {
   }
 
   render() {
+
+    const user = memoryUtils.user
+    // 如果登陆
+    if (user._id) {
+      // 自动跳转到admin
+      return <Redirect to="/"></Redirect>
+    }
+
     const form = this.props.form
     const getFieldDecorator  = this.props.form.getFieldDecorator
     return (
