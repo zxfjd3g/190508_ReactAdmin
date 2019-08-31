@@ -15,13 +15,44 @@ class Login extends Component {
     event.preventDefault();
     // 得到输入数据
     const form = this.props.form
-    const username = form.getFieldValue('username')
-    const password = form.getFieldValue('password')
-    const values = form.getFieldsValue()
-    console.log(username, password, values)
+    // const username = form.getFieldValue('username')
+    // const password = form.getFieldValue('password')
+    // const values = form.getFieldsValue()
+    // console.log(username, password, values)
 
-    alert('发送登陆的ajax登陆')
-  };
+    form.validateFields((error, values) => {
+      if (!error) { // 验证通过
+        console.log('values', values)
+        alert('发送登陆的ajax登陆')
+      } else {
+        console.log('前台表单验证失败')
+      }
+    })
+  }
+
+  /* 
+  验证密码的验证器函数
+  */
+  validatePwd = (rule, value, callback) => {
+    value = value.trim()
+    /* 
+    1). 必须输入
+    2). 必须大于等于4位
+    3). 必须小于等于12位
+    4). 必须是英文、数字或下划线组成
+    */
+    if (!value) {
+      callback('请输入密码')
+    } else if (value.length<4) {
+      callback('密码不能小于4位')
+    }  else if (value.length>12) {
+      callback('密码不能大于12位')
+    } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+      callback('密码只能包含英文、数字或下划线!')
+    } else {
+      callback() // 验证通过
+    }
+  }
 
   render() {
     const form = this.props.form
@@ -37,7 +68,22 @@ class Login extends Component {
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Item>
               {
-                getFieldDecorator('username', {})(
+                /* 
+                1). 必须输入
+                2). 必须大于等于4位
+                3). 必须小于等于12位
+                4). 必须是英文、数字或下划线组成
+                */
+                getFieldDecorator('username', {
+                  initialValue: '', // 指定输入框的初始值
+                  // 声明式验证: 使用内置的验证规则进行验证
+                  rules: [
+                    { required: true, whitespace: true, message: '必须输入用户名!' },
+                    { min: 4, message: '用户名不能小于4位!' },
+                    { max: 12, message: '用户名不能大于12位!' },
+                    { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能包含英文、数字或下划线!' },
+                  ]
+                })(
                   <Input
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }}/>}
                     placeholder="用户名"
@@ -49,7 +95,12 @@ class Login extends Component {
             </Item>
             <Form.Item>
               {
-                getFieldDecorator('password', {})(
+                getFieldDecorator('password', {
+                  initialValue: '', // 指定输入框的初始值
+                  rules: [
+                    {validator: this.validatePwd}
+                  ]
+                })(
                   <Input
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
@@ -70,6 +121,14 @@ class Login extends Component {
     )
   }
 }
+
+/*
+用户名/密码的的合法性要求
+  1). 必须输入
+  2). 必须大于等于4位
+  3). 必须小于等于12位
+  4). 必须是英文、数字或下划线组成
+ */
 
 const WrappedLogin = Form.create()(Login)
 export default WrappedLogin
@@ -102,6 +161,6 @@ function (props) {
 高阶组件
   参数为组件，返回值为新组件的函数
   React 中用于复用组件逻辑的一种高级技巧
-    将多个组件通用的功能提取到高阶组件函数中, 再通过标签属性传递要包装的组件
+  将多个组件通用的功能提取到高阶组件函数中, 再通过标签属性传递要包装的组件
 
 */
