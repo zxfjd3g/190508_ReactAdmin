@@ -3,6 +3,8 @@ import { Form, Icon, Input, Button, message } from 'antd'
 import {Redirect} from 'react-router-dom'
 
 import memoryUtils from '../../utils/memoryUtils'
+import storageUtils from '../../utils/storageUtils'
+
 import { reqLogin } from '../../api'
 import logo from './images/logo.png'
 import './login.less'
@@ -34,7 +36,8 @@ class Login extends Component {
           const user = result.data  // [object Object]
 
           // 保存user (local/memory)
-          localStorage.setItem('user_key', JSON.stringify(user))
+          // localStorage.setItem('user_key', JSON.stringify(user))
+          storageUtils.saveUser(user)
           memoryUtils.user = user
 
           // 跳转到admin路由
