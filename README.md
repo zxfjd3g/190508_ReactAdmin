@@ -95,7 +95,7 @@
 
 # day02
 ## 1. 高阶函数与高阶组件
-    1). 高阶函数
+    1). 高阶函数 (函数式编程)
         定义: 接收的参数是函数或者返回值是函数
         常见的: 数组遍历相关的方法 / 定时器 / bind() / Promise / Form.create()(组件)
         作用: 实现一个更加强大, 动态的功能
@@ -103,6 +103,7 @@
         本质: 是一个函数, 函数接收一个组件, 返回一个新的组件
         常见的高阶组件:
             Form.create()返回的就是一个高阶组件 :  Form.create()(组件) 返回一个新的组件
+            withRouter(非路由组件)
             connect()返回的就是一个高阶组件: connect()(UI组件)返回容器组件
         作用:
             React 中用于复用组件逻辑的一种高级技巧
@@ -121,6 +122,7 @@
         form.getFieldDecorator('标识名称', {initialValue: 初始值, rules: []})(<Input/>)包装表单项标签
         form.getFieldsValue(): 得到包含所有输入数据的对象
         form.getFieldValue(id): 根据标识得到对应字段输入的数据
+        form.resetFields(): 重置输入框输入的数据(回到inititalValue)
      
     3). 前台表单验证
         a. 声明式实时表单验证:
