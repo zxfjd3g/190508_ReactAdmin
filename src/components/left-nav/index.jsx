@@ -18,6 +18,8 @@ class LeftNav extends Component {
     reduce() + 递归 
   */
   getMenuNodes2 = (menuList) => {
+    // 请求的路由路径
+    const path = this.props.location.pathname
     return menuList.reduce((pre, item) => {
       // 向pre中添加<Item>
       if (!item.children) {
@@ -30,6 +32,14 @@ class LeftNav extends Component {
           </Item>
         )
       } else { // 向pre中添加<SubMenu>
+
+        // 请求的路由路径对应children中某个
+        if (item.children.some(item => item.key===path)) {
+          // 将item的key保存为openKey
+          this.openKey = item.key
+        }
+        
+
         pre.push(
           <SubMenu
             key={item.key}
@@ -84,10 +94,28 @@ class LeftNav extends Component {
     })
   }
 
+  /* 
+  在第一次render()之后执行
+  执行异步操作: 发ajax/启动定时器/订阅消息
+  */
+  componentDidMount () {
+    // this.menuNodes = this.getMenuNodes2(menuList)
+  }
+
+  /* 
+  在第一次render()之前执行
+  为第一次render执行同步操作(准备数据)
+  */
+  componentWillMount () {
+    this.menuNodes = this.getMenuNodes2(menuList)
+  }
+
   render() {
-    console.log('left-nav render()', this.props.location.pathname)
+    console.log('left-nav render()', this.props.location.pathname, this.openKey)
+    const menuNodes = this.menuNodes
     // 读取当前请求的路由路径
     const selectedKey = this.props.location.pathname
+    const openKey = this.openKey
 
     return (
       <div className="left-nav">
@@ -101,41 +129,9 @@ class LeftNav extends Component {
           theme="dark"
           /* defaultSelectedKeys={[selectedKey]} */  /* 多次指定值, 只有第一次有效果 */
           selectedKeys={[selectedKey]}  /* 多次指定值, 每次指定都生效 */
+          defaultOpenKeys={[openKey]}
         >
-          {
-            this.getMenuNodes(menuList)
-          }
-
-         {/*  <Item key="/home">
-            <Link to="/home">
-              <Icon type="home" />
-              <span>首页</span>
-            </Link>
-          </Item>
-
-          <SubMenu
-            key="cp"
-            title={
-              <span>
-                <Icon type="mail" />
-                <span>商品</span>
-              </span>
-            }
-          >
-            <Item key="/category">
-              <Link to="/category">
-                <Icon type="home" />
-                <span>品类管理</span>
-              </Link>
-            </Item>
-            <Item key="/product">
-              <Link to="/product">
-                <Icon type="home" />
-                <span>商品管理</span>
-              </Link>
-            </Item>
-          </SubMenu>
-           */}
+          { menuNodes }
         </Menu>
       </div>
     )
@@ -149,6 +145,7 @@ export default withRouter(LeftNav) // 新的组件会向非路由组件传递his
   a. 使用withRouter()包装LeftNav, 向其传入history/location/match
   b. 通过location得到当前请求的路由路径
   c. 通过: selectedKeys=[路由路径]
-  
+
 2. 如果选中是二级菜单项, 展开对应的SubMenu的二级菜单列表
+
 */
