@@ -221,7 +221,9 @@
     
     5). 2个问题?
         刷新时如何选中对应的菜单项?
-            selectedKey是当前请求的path
+            a. 使用withRouter()包装LeftNav, 向其传入history/location/match
+            b. 通过location得到当前请求的路由路径
+            c. 通过: selectedKeys=[路由路径]
         刷新子菜单路径时, 自动打开子菜单列表?
             openKey是 一级列表项的某个子菜单项是当前对应的菜单项
 
