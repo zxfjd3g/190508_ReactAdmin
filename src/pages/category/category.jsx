@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import {Modal} from 'antd'
+import {Modal, message} from 'antd'
 
 import CategoryForm from './category-form'
-import { reqCategorys } from '../../api'
+import { reqCategorys, reqAddCategory, reqUpdateCategory } from '../../api'
 import LinkButton from '../../components/link-button'
 import {
   Card,
@@ -48,10 +48,22 @@ export default class Category extends Component {
   */
   addCategory = () => {
     // 对form进行验证
-    this.form.validateFields((error, values) => {
+    this.form.validateFields(async (error, values) => {
       if (!error) {
+        // 重置输入框中的数据(变为initialValue)
+        this.form.resetFields()
         // 验证通过后发请求添加分类
-        alert(values.categoryName)
+        const result = await reqAddCategory(values.categoryName)
+        if (result.status===0) {
+          this.setState({
+            showStatus: 0
+          })
+          message.success('添加分类成功')
+          // 获取最新分类列表显示
+          this.getCategorys()
+        } else {
+          message.error(result.msg || '添加分类失败')
+        }
       }
     })
     
@@ -61,13 +73,34 @@ export default class Category extends Component {
   修改分类
   */
   UpdateCategory = () => {
-
+    // 对form进行验证
+    this.form.validateFields(async (error, values) => {
+      if (!error) {
+        // 重置输入框中的数据(变为initialValue)
+        this.form.resetFields()
+        // 验证通过后发请求更新分类
+        values.categoryId = this.category._id
+        const result = await reqUpdateCategory(values)
+        if (result.status===0) {
+          this.setState({
+            showStatus: 0
+          })
+          message.success('修改分类成功')
+          // 获取最新分类列表显示
+          this.getCategorys()
+        } else {
+          message.error(result.msg || '修改分类失败')
+        }
+      }
+    })
   }
 
   /* 
   取消
   */
   handleCancel = () => {
+    // 重置输入框中的数据(变为initialValue)
+    this.form.resetFields()
     this.setState({
       showStatus: 0
     })
