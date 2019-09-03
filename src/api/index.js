@@ -61,3 +61,39 @@ export const reqUpdateCategory = ({categoryId, categoryName}) => ajax.post(
   '/manage/category/update',
   {categoryId, categoryName}
 )
+
+/* 
+获取商品分页列表
+*/
+export const reqProducts = (pageNum, pageSize) => ajax.get(
+  '/manage/product/list',
+  {
+    params: {
+      pageNum,
+      pageSize
+    }
+  }
+)
+
+/* 
+进行商品搜索分页
+searchType: 'productName' 或者 'productDesc'
+*/
+export const reqSearchProducts = ({pageNum, pageSize, searchType, searchName}) => ajax.get(
+  '/manage/product/search',
+  {
+    params: {
+      pageNum,
+      pageSize,
+      [searchType]: searchName
+    }
+  }
+)
+
+/* 
+对商品进行上架/下架处理
+*/
+export const reqUpdateStatus = (productId, status) => ajax.post(
+  '/manage/product/updateStatus',
+  {productId, status}
+)

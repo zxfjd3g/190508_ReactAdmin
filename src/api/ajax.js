@@ -36,6 +36,12 @@ axios.interceptors.response.use(
   }
 )
 
+/* axios.get = function (url, params, config) {
+  config.url = url
+  config.params = params
+  axios(config)
+} */
+
 // 默认暴露axios
 export default axios
 
