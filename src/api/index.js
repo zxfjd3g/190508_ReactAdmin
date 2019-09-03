@@ -36,3 +36,10 @@ export const reqWeather = (city) => {
   })
   
 }
+
+/* 
+获取分类列表
+*/
+export const reqCategorys = () => ajax({
+  url: '/manage/category/list',
+})

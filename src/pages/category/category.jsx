@@ -1,4 +1,8 @@
 import React, { Component } from 'react'
+import {Modal} from 'antd'
+
+import CategoryForm from './category-form'
+import { reqCategorys } from '../../api'
 import LinkButton from '../../components/link-button'
 import {
   Card,
@@ -7,53 +11,147 @@ import {
   Table
 } from 'antd'
 
-const dataSource = [
-  {
-    "_id": "5c2ed631f352726338607046",
-    "name": "分类001"
-  },
-  {
-    "_id": "5c2ed647f352726338607047",
-    "name": "分类2"
-  },
-  {
-    "_id": "5c2ed64cf352726338607048",
-    "name": "1分类3"
-  }
-]
-
-const columns = [
-  {
-    title: '分类名称',
-    dataIndex: 'name',
-  },
-  {
-    width: 250,
-    title: '操作',
-    render: () => <LinkButton>修改分类</LinkButton>
-  },
-];
-
 /**
  * 分类管理
  */
 export default class Category extends Component {
+
+  state = {
+    categorys: [], // 所有分类的数组
+    loading: false, // 标识是否正在请求中
+    showStatus: 0, // 0: 都不显示, 1: 显示添加 2: 显示修改
+  }
+
+  /* 
+  获取获取所有分类列表显示
+  */
+  getCategorys = async () => {
+    // 显示loading
+    this.setState({
+      loading: true
+    })
+    const result = await reqCategorys()
+    // 隐藏loading
+    this.setState({
+      loading: false
+    })
+    if (result.status===0) {
+      const categorys = result.data
+      this.setState({
+        categorys
+      })
+    }
+  }
+
+  /* 
+  添加分类
+  */
+  addCategory = () => {
+    // 对form进行验证
+    this.form.validateFields((error, values) => {
+      if (!error) {
+        // 验证通过后发请求添加分类
+        alert(values.categoryName)
+      }
+    })
+    
+  }
+
+  /* 
+  修改分类
+  */
+  UpdateCategory = () => {
+
+  }
+
+  /* 
+  取消
+  */
+  handleCancel = () => {
+    this.setState({
+      showStatus: 0
+    })
+  }
+
+  /* 
+  显示添加界面
+  */
+  showAdd = () => {
+    this.setState({
+      showStatus: 1
+    })
+  }
+  /* 
+  显示修改界面
+  */
+  showUpdate = (category) => {
+    // 保存当前分类
+    this.category = category
+
+    this.setState({
+      showStatus: 2
+    })
+  }
+
+  componentDidMount () {
+    this.getCategorys()
+  }
+
+  componentWillMount () {
+    this.columns = [
+      {
+        title: '分类名称',
+        dataIndex: 'name',
+      },
+      {
+        width: 250,
+        title: '操作',
+        render: (category) => <LinkButton onClick={() => this.showUpdate(category)}>修改分类</LinkButton>
+      },
+    ]
+  }
+
   render() {
+    // 取出保存的用于更新的分类对象
+    const category = this.category || {}
+
+    const {categorys, loading, showStatus} = this.state
     const extra = (
-      <Button type="primary">
+      <Button type="primary" onClick={this.showAdd}>
         <Icon type="plus"></Icon>
         添加
       </Button>
     )
+
     return (
       <Card extra={extra}>
         <Table
+          loading={loading}
           bordered={true}
           rowKey="_id"  /* 将数据对象category的_id的属性值作为每行的key */
           pagination={{pageSize: 2, showQuickJumper: true}}
-          dataSource={dataSource} 
-          columns={columns} 
+          dataSource={categorys} 
+          columns={this.columns} 
         />
+        <Modal
+          title="添加分类"
+          visible={showStatus===1}
+          onOk={this.addCategory}
+          onCancel={this.handleCancel}
+        >
+          <CategoryForm setForm={(form) => this.form = form}/>
+        </Modal>
+        <Modal
+          title="修改分类"
+          visible={showStatus===2}
+          onOk={this.UpdateCategory}
+          onCancel={this.handleCancel}
+        >
+          <CategoryForm 
+            categoryName={category.name} 
+            setForm={(form) => this.form = form}
+          />
+        </Modal>
       </Card>
     )
   }
