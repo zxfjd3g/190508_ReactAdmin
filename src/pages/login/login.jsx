@@ -87,7 +87,7 @@ class Login extends Component {
     }
 
     const form = this.props.form
-    const getFieldDecorator  = this.props.form.getFieldDecorator
+    const getFieldDecorator  = form.getFieldDecorator
     return (
       <div className="login">
         <div className="login-header">

@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
+import { Modal } from 'antd'
 
+import LinkButton from '../link-button'
 import { reqWeather } from '../../api'
 import { formateDate } from '../../utils/dateUtils'
 import menuConfig from '../../config/menuConfig'
 import memoryUtils from '../../utils/memoryUtils'
 import "./index.less"
+import storageUtils from '../../utils/storageUtils'
 
 /* 
 Admin的右侧头部组件
@@ -41,7 +44,7 @@ class Header extends Component {
   }
 
   updateTime = () => {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.setState({
         currentTime: formateDate(Date.now())
       })
@@ -54,6 +57,28 @@ class Header extends Component {
       dayPictureUrl, 
       weather
     })
+  }
+
+  logout = () => {
+    Modal.confirm({
+      title: '确定退出吗?',
+      onOk: () => {
+        // 删除保存的user
+        storageUtils.removeUser()
+        memoryUtils.user = {}
+        // 跳转到login
+        this.props.history.replace('/login')
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+
+
+  componentWillUnmount () {
+    // 清除定时器
+    clearInterval(this.intervalId)
   }
 
   componentDidMount () {
@@ -71,7 +96,7 @@ class Header extends Component {
       <div className="header">
           <div className="header-top">
             欢迎, {username}   &nbsp;
-            <a href="javascript:">退出</a>
+            <LinkButton onClick={this.logout}>退出</LinkButton>
           </div>
           <div className="header-bottom">
             <div className="header-bottom-left">{title}</div>
