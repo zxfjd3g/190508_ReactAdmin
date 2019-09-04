@@ -129,3 +129,12 @@ export const reqDeleteImg = (name) => ajax({
     name
   }
 })
+
+/* 
+添加或更新商品
+*/
+export const addOrUpdateProduct = (product) => ajax({
+  url: '/manage/product/' + (product._id ? 'update' : 'add'),
+  method: "POST",
+  data: product
+})

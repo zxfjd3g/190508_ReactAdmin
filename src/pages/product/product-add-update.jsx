@@ -6,14 +6,15 @@ import {
   Form,
   Input,
   Select,
-  Button
+  Button,
+  message
 } from 'antd'
 
 import PicturesWall from './pictures-wall'
 import RichTextEditor from './rich-text-editor'
 
 import LinkButton from '../../components/link-button'
-import {reqCategorys} from '../../api'
+import {reqCategorys, addOrUpdateProduct} from '../../api'
 const {Item} = Form
 const {Option} = Select
 
@@ -34,7 +35,7 @@ class ProductAddUpdate extends Component {
     // 阻止事件的默认行为(不提交表单)
     event.preventDefault()
 
-    this.props.form.validateFields((error, values) => {
+    this.props.form.validateFields(async (error, values) => {
       if (!error) {
         // 得到表单自动收集的数据
         const {name, desc, price, categoryId} = values
@@ -46,6 +47,21 @@ class ProductAddUpdate extends Component {
         // 获取商品详情
         const detail = this.editorRef.current.getDetail()
         console.log('detail', detail)
+
+        // 封装product
+        const product = {name, desc, price, categoryId, imgs, detail}
+        if (this.props.location.state) {
+          product._id = this.props.location.state._id
+        }
+
+        // 请求添加/更新商品
+        const result = await addOrUpdateProduct(product)
+        if (result.status===0) {
+          message.success('操作商品成功')
+          this.props.history.replace('/product')
+        } else {
+          message.error('操作商品失败')
+        }
       }
     })
   }
