@@ -10,7 +10,7 @@ import {
 } from 'antd'
 
 import LinkButton from '../../components/link-button'
-
+import {reqCategorys} from '../../api'
 const {Item} = Form
 const {Option} = Select
 
@@ -19,11 +19,51 @@ const {Option} = Select
 */
 class ProductAddUpdate extends Component {
 
-  handleSubmit = () => {
+  state = {
+    categorys: []
+  }
 
+  handleSubmit = (event) => {
+    // 阻止事件的默认行为(不提交表单)
+    event.preventDefault()
+
+    this.props.form.validateFields((error, values) => {
+      if (!error) {
+        const {name, desc, price, categoryId} = values
+        console.log(name, desc, price, categoryId)
+      }
+    })
+  }
+
+  getCategorys = async () => {
+    const result = await reqCategorys()
+    if (result.status===0) {
+      const categorys = result.data
+      this.setState({
+        categorys
+      })
+    }
+  }
+
+  /* 
+  对价格进行自定义验证
+  */
+  validatePrice = (rule, value, callback) => {
+    if (value < 0) {
+      callback('价格不能小于0')
+    } else {
+      callback()
+    }
+  }
+
+  componentDidMount () {
+    this.getCategorys()
   }
 
   render() {
+
+    const {categorys} = this.state
+    const product = this.props.location.state || {}
 
     const {getFieldDecorator} = this.props.form
 
@@ -47,7 +87,7 @@ class ProductAddUpdate extends Component {
           <Item label="商品名称">
             {
               getFieldDecorator('name', {
-                initialValue: '',
+                initialValue: product.name,
                 rules: [
                   {required: true, whitespace: true, message: '请输入商品名称'}
                 ]
@@ -59,7 +99,7 @@ class ProductAddUpdate extends Component {
           <Item label="商品描述">
             {
               getFieldDecorator('desc', {
-                initialValue: '',
+                initialValue: product.desc,
                 rules: [
                   {required: true, whitespace: true, message: '请输入商品描述'}
                 ]
@@ -71,9 +111,10 @@ class ProductAddUpdate extends Component {
           <Item label="商品价格">
             {
               getFieldDecorator('price', {
-                initialValue: '',
+                initialValue: product.price && (''+product.price),
                 rules: [
-                  {required: true, whitespace: true, message: '请输入商品价格'}
+                  {required: true, whitespace: true, message: '请输入商品价格'},
+                  {validator: this.validatePrice}
                 ]
               })(
                 <Input type="number" placeholder="商品价格" addonAfter="元"/>
@@ -83,14 +124,16 @@ class ProductAddUpdate extends Component {
           <Item label="商品分类">
             {
               getFieldDecorator('categoryId', {
-                initialValue: '',
+                initialValue: product.categoryId || '',
                 rules: [
                   {required: true, whitespace: true, message: '请选择商品分类'}
                 ]
               })(
                 <Select>
                   <Option value="">未选择</Option>
-                  <Option value="123">ff</Option>
+                  {
+                    categorys.map(c => <Option key={c._id} value={c._id}>{c.name}</Option>)
+                  }
                 </Select>
               )
             }
