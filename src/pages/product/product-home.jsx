@@ -11,6 +11,7 @@ import {
 
 import LinkButton from '../../components/link-button'
 import { reqProducts, reqSearchProducts, reqUpdateStatus } from '../../api'
+import memoryUtils from '../../utils/memoryUtils';
 
 const {Option} = Select
 
@@ -84,14 +85,14 @@ export default class ProductHome extends Component {
           }
 
           return (
-            <span>
+            <React.Fragment>
               <Button 
                 type="primary" 
                 onClick={()=> this.reqUpdateStatus(_id, status===1 ? 2 : 1)}>
                 {btnText}
               </Button>
               <span>{text}</span>
-            </span>
+            </React.Fragment>
           )
         }
       },
@@ -100,10 +101,19 @@ export default class ProductHome extends Component {
         width: 100,
         render: (product) => {
           return (
-            <span>
-              <LinkButton>详情</LinkButton>
+            <>
+              <LinkButton 
+                onClick={() => {
+                  // 将product保存到共享内存
+                  memoryUtils.product = product
+                  // 跳转到detail组件显示product
+                  this.props.history.push(`/product/detail/${product._id}`)
+                }}
+              >
+                详情
+              </LinkButton>
               <LinkButton>修改</LinkButton>
-            </span>
+            </>
           )
         }
       },
@@ -117,7 +127,7 @@ export default class ProductHome extends Component {
   render() {
     const {products, total, searchType, searchName} = this.state
     const title = (
-      <div>
+      <>
         <Select 
           value={searchType} 
           style={{width: 150}} 
@@ -137,7 +147,7 @@ export default class ProductHome extends Component {
           this.search = true
           this.getProducts(1)
         }}>搜索</Button>
-      </div>
+      </>
     )
 
     const extra = (

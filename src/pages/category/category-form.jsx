@@ -14,9 +14,15 @@ class CategoryForm extends Component {
     setForm: PropTypes.func.isRequired
   }
 
-  componentWillMount () {
+  constructor (props) {
+    super(props)
     // 调用父组件传入函数, 将form对象作为数据传递给父组件Category
     this.props.setForm(this.props.form)
+  }
+
+  componentWillMount () {
+    // 调用父组件传入函数, 将form对象作为数据传递给父组件Category
+    // this.props.setForm(this.props.form)
   }
 
   render() {
