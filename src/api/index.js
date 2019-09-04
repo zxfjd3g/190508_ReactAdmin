@@ -97,3 +97,24 @@ export const reqUpdateStatus = (productId, status) => ajax.post(
   '/manage/product/updateStatus',
   {productId, status}
 )
+
+
+/* 
+根据商品ID获取商品
+*/
+export const reqProduct = (productId) => ajax({
+  url: '/manage/product/info',
+  params: {
+    productId
+  }
+})
+
+/* 
+根据分类ID获取分类
+*/
+export const reqCategory = (categoryId) => ajax({
+  url: '/manage/category/info',
+  params: {
+    categoryId
+  }
+})
