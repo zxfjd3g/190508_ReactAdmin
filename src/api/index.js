@@ -118,3 +118,14 @@ export const reqCategory = (categoryId) => ajax({
     categoryId
   }
 })
+
+/* 
+删除图片
+*/
+export const reqDeleteImg = (name) => ajax({
+  url: '/manage/img/delete',
+  method: 'POST',
+  data: {
+    name
+  }
+})

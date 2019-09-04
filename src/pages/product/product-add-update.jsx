@@ -9,6 +9,7 @@ import {
   Button
 } from 'antd'
 
+import PicturesWall from './pictures-wall'
 import LinkButton from '../../components/link-button'
 import {reqCategorys} from '../../api'
 const {Item} = Form
@@ -72,7 +73,7 @@ class ProductAddUpdate extends Component {
         <LinkButton onClick={() => this.props.history.goBack()}>
           <Icon type="arrow-left"></Icon>
         </LinkButton>
-        <span>添加商品</span>
+        <span>{product._id ? '修改' : '添加'}商品</span>
       </>
     )
 
@@ -139,8 +140,8 @@ class ProductAddUpdate extends Component {
             }
           </Item>
 
-          <Item label="商品图片">
-            图片上传组件
+          <Item label="商品图片" wrapperCol={{span: 15 }}>
+            <PicturesWall />
           </Item>
 
           <Item label="商品详情">
