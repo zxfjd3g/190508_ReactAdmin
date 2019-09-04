@@ -8,6 +8,7 @@ import {
 import { reqProduct, reqCategory } from '../../api'
 import LinkButton from '../../components/link-button'
 import memoryUtils from '../../utils/memoryUtils'
+import {BASE_IMG_PATH} from '../../utils/constants'
 
 const {Item} = List
 /* 
@@ -83,7 +84,7 @@ export default class ProductDetail extends Component {
             <span className="detail-imgs">
               {
                 product.imgs && product.imgs.map(item => (
-                  <img key={item} src={'http://localhost:5000/upload/' + item} alt="img"/>
+                  <img key={item} src={BASE_IMG_PATH + item} alt="img"/>
                 ))
               }
             </span>

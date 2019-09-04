@@ -10,7 +10,9 @@
     "react-router-dom": "5.0.0",
     "axios": "0.18.0",
     "store": "2.0.12",
-    "jsonp": "0.2.1"
+    "jsonp": "0.2.1",
+    "react-draft-wysiwyg": "1.13.2",
+    "draftjs-to-html": "0.8.4"
   },
   "devDependencies": {
     "react-app-rewired": "2.1.3",

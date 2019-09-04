@@ -1,6 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Upload, Icon, Modal, message } from 'antd'
 import { reqDeleteImg } from '../../api'
+import {BASE_IMG_PATH} from '../../utils/constants'
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -12,11 +14,46 @@ function getBase64(file) {
 }
 
 export default class PicturesWall extends React.Component {
-  state = {
-    previewVisible: false,  // 是否显示大图预览Modal
-    previewImage: '', // 大图的url/base64字符串
-    fileList: [], // 所有已上传图片文件对象的数组
-  };
+
+  static propTypes = {
+    imgs: PropTypes.array
+  }
+
+  constructor (props) {
+    super(props)
+
+    let fileList = []
+    const {imgs} = this.props
+    if (imgs && imgs.length>0) {
+      // 根据imgs生成包含n个file对象的数组
+      /* 
+      {
+        uid: '-1',
+        name: 'image.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      }
+      */
+      fileList = imgs.map((img, index) => ({
+        uid: index,
+        name: img,
+        status: 'done',
+        url: BASE_IMG_PATH + img
+      }))
+    }
+
+    this.state = {
+      previewVisible: false,  // 是否显示大图预览Modal
+      previewImage: '', // 大图的url/base64字符串
+      fileList, // 所有已上传图片文件对象的数组
+    }
+  }
+
+  /* 
+  返回所有已上传图片文件名的数组
+  */
+  getImgs = () => this.state.fileList.map(file => file.name)
+
 
   /* 
   隐藏大图预览
@@ -87,6 +124,6 @@ export default class PicturesWall extends React.Component {
           <img alt="example" style={{ width: '100%' }} src={previewImage} />
         </Modal>
       </>
-    );
+    )
   }
 }

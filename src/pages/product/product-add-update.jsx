@@ -10,6 +10,8 @@ import {
 } from 'antd'
 
 import PicturesWall from './pictures-wall'
+import RichTextEditor from './rich-text-editor'
+
 import LinkButton from '../../components/link-button'
 import {reqCategorys} from '../../api'
 const {Item} = Form
@@ -24,14 +26,26 @@ class ProductAddUpdate extends Component {
     categorys: []
   }
 
+  // 创建一个ref容器对象, 并保存在组件对象上
+  pwRef = React.createRef()
+  editorRef = React.createRef()
+
   handleSubmit = (event) => {
     // 阻止事件的默认行为(不提交表单)
     event.preventDefault()
 
     this.props.form.validateFields((error, values) => {
       if (!error) {
+        // 得到表单自动收集的数据
         const {name, desc, price, categoryId} = values
         console.log(name, desc, price, categoryId)
+        // 获取所有上传图片文件名的数组
+        const imgs = this.pwRef.current.getImgs()
+        console.log('imgs', imgs)
+
+        // 获取商品详情
+        const detail = this.editorRef.current.getDetail()
+        console.log('detail', detail)
       }
     })
   }
@@ -141,11 +155,11 @@ class ProductAddUpdate extends Component {
           </Item>
 
           <Item label="商品图片" wrapperCol={{span: 15 }}>
-            <PicturesWall />
+            <PicturesWall ref={this.pwRef} imgs={product.imgs}/>
           </Item>
 
-          <Item label="商品详情">
-            商品详情组件
+          <Item label="商品详情" wrapperCol={{span: 20 }}>
+            <RichTextEditor ref={this.editorRef} detail={product.detail}/>
           </Item>
           <Item>
             <Button type="primary" htmlType="submit">提交</Button>
