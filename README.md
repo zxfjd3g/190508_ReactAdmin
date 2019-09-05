@@ -365,7 +365,8 @@
     5). 进入添加界面
         history.push('/product/addupdate')
     6). 进入修改界面
-        history.push('/product/addupdate', product)
+        history.push('/product/addupdate', product) // 必须是BrowserRouter
+        this.props.location.state
 
 ## 2. ProductDetail组件
     1). 显示商品信息: <Card> / List 
@@ -385,7 +386,7 @@
         Upload / Modal / Icon
         根据示例DEMO改造编写
     2). 上传图片
-        在<Upload >上配置接口的path和请求参数名
+        在<Upload>上配置接口的path和请求参数名
         监视文件状态的改变: 上传中 / 上传完成/ 删除
         在上传成功时, 保存好相关信息: name / url
         为父组件提供获取已上传图片文件名数组的方法

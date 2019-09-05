@@ -41,7 +41,7 @@ export default class Role extends Component {
       {
         title: '创建时间',
         dataIndex: 'create_time',
-        render: create_time => formateDate(create_time)
+        render: formateDate
       },
       {
         title: '授权时间',
@@ -96,7 +96,18 @@ export default class Role extends Component {
           isShowAdd: false
         })
 
-       
+        const result = await reqAddRole(values.roleName)
+        if (result.status===0) {
+          message.success('添加角色成功')
+          // this.getRoles()
+          const role = result.data
+          const roles = this.state.roles
+          // roles.push(role)
+          this.setState({
+            roles: [...roles, role]
+          })
+        }
+        
       }
     })
   }
@@ -137,7 +148,7 @@ export default class Role extends Component {
           rowKey='_id'
           dataSource={roles}
           columns={this.columns}
-          pagination={{ defaultPageSize: PAGE_SIZE }}
+          pagination={{ pageSize: PAGE_SIZE }}
         />
 
         <Modal

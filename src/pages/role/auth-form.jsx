@@ -3,9 +3,13 @@ import PropTypes from 'prop-types'
 import {
   Form,
   Input,
+  Tree
 } from 'antd'
 
+import menuList from '../../config/menuConfig'
+
 const Item = Form.Item
+const { TreeNode } = Tree
 
 /*
 添加分类的form组件
@@ -14,6 +18,19 @@ export default class AuthForm extends Component {
 
   static propTypes = {
     role: PropTypes.object
+  }
+
+  /* 
+  根据菜单数据数组生成<TreeNode>的数组
+  */
+  getTreeNodes = (menuList) => {
+    return menuList.map(item => {
+      return (
+        <TreeNode title={item.title} key={item.key}>
+          {item.children ? this.getTreeNodes(item.children) : null}
+        </TreeNode>
+      )
+    })
   }
 
   render() {
@@ -25,11 +42,21 @@ export default class AuthForm extends Component {
     }
 
     return (
-      <div>
+      <>
         <Item label='角色名称' {...formItemLayout}>
-          <Input value={role.name} />
+          <Input value={role.name} disabled/>
         </Item>
-      </div>
+        <Tree
+          checkable
+          defaultExpandAll
+        >
+          <TreeNode title="平台权限" key="all">
+            {
+              this.getTreeNodes(menuList)
+            }
+          </TreeNode>
+        </Tree>
+      </>
     )
   }
 }

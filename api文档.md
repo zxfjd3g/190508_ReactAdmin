@@ -84,7 +84,7 @@
           "phone": "13712341234",
           "email": "test@qq.com",
           "create_time": 1547384876804,
-          "__v": 0
+          "role_id": "333b382c82a14446f4ffb234"
         }
       }
 	失败
@@ -644,7 +644,6 @@
                 "_id": "5ca9eaa1b49ef916541160d3",
                 "name": "测试",
                 "create_time": 1554639521749,
-                "__v": 0,
                 "auth_time": 1558679920395,
                 "auth_name": "test007"
             },
