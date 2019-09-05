@@ -4,6 +4,7 @@ import {
   Button,
   Table,
   Modal,
+  message,
 } from 'antd'
 
 import LinkButton from '../../components/link-button'
@@ -52,7 +53,8 @@ export default class User extends Component {
       {
         title: '所属角色',
         dataIndex: 'role_id',
-        render: value => this.roleNames[value]
+        // render: role_id => this.state.roles.find(role => role._id===role_id).name
+        render: role_id => this.roleNames[role_id].name
       },
       {
         title: '操作',
@@ -72,7 +74,8 @@ export default class User extends Component {
    */
   initRoleNames = (roles) => {
     this.roleNames = roles.reduce((pre, role) => {
-      pre[role._id] = role.name
+      // pre[role._id] = role.name
+      pre[role._id] = role
       return pre
     }, {})
   }
@@ -110,8 +113,13 @@ export default class User extends Component {
     const result = await reqUsers()
     if (result.status === 0) {
       const {users, roles} = result.data
-      // 初始化生成一个包含所有角色名的对象容器 {_id1: name1, _id2: nam2}
-      this.initRoleNames(roles)
+
+      // 生成包含所角色名的对象(属性名是角色的id值)
+      this.roleNames = roles.reduce((pre, role) => {
+        pre[role._id] = role.name
+        return pre
+      }, {})
+
       this.setState({
         users,
         roles
@@ -146,6 +154,7 @@ export default class User extends Component {
 
     const result = await reqAddOrUpdateUser(user)
     if (result.status === 0) {
+      message.success('添加更新用户成功')
       this.getUsers()
     }
 

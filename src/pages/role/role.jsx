@@ -107,7 +107,6 @@ export default class Role extends Component {
             roles: [...roles, role]
           })
         }
-        
       }
     })
   }
@@ -120,7 +119,20 @@ export default class Role extends Component {
     this.setState({
       isShowAuth: false
     })
-    
+
+    const role = this.role
+    // menus
+    role.menus = this.authRef.current.getMenus()
+    // auth_time
+    role.auth_time = Date.now()
+    // auth_name
+    role.auth_name = memoryUtils.user.username
+
+    const result = await reqUpdateRole(role)
+    if (result.status===0) {
+      message.success(`给${role.name}授权成功`)
+      this.getRoles()
+    }
   }
 
   componentWillMount() {

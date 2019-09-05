@@ -20,6 +20,21 @@ export default class AuthForm extends Component {
     role: PropTypes.object
   }
 
+  constructor (props) {
+    super(props)
+    console.log('AuthForm constructor()')
+   
+    let checkedKeys = []
+    const role = this.props.role
+    if (role) {
+      checkedKeys = role.menus
+    }
+    this.state = {
+      checkedKeys
+    }
+  }
+
+  getMenus = () => this.state.checkedKeys
   /* 
   根据菜单数据数组生成<TreeNode>的数组
   */
@@ -33,8 +48,27 @@ export default class AuthForm extends Component {
     })
   }
 
+  handleCheck = (checkedKeys) => {
+    // 更新checkedKeys状态数据
+    this.setState({
+      checkedKeys
+    })
+  }
+
+  /* 
+  将要接收到新的属性的回调
+  */
+  componentWillReceiveProps (nextProps) {
+    const menus = nextProps.role.menus
+    this.setState({
+      checkedKeys: menus
+    })
+  }
+
   render() {
     console.log('AuthForm render()')
+
+    const {checkedKeys} = this.state
     const { role } = this.props
     const formItemLayout = {
       labelCol: { span: 4 },  // 左侧label的宽度
@@ -49,6 +83,8 @@ export default class AuthForm extends Component {
         <Tree
           checkable
           defaultExpandAll
+          checkedKeys={checkedKeys}
+          onCheck={this.handleCheck}
         >
           <TreeNode title="平台权限" key="all">
             {
