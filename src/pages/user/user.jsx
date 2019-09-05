@@ -54,7 +54,7 @@ export default class User extends Component {
         title: '所属角色',
         dataIndex: 'role_id',
         // render: role_id => this.state.roles.find(role => role._id===role_id).name
-        render: role_id => this.roleNames[role_id].name
+        render: role_id => this.roleNames[role_id]
       },
       {
         title: '操作',
