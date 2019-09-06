@@ -11,20 +11,5 @@
   </head>
   <body>
     <div id="root"></div>
-
-    <script>
-      function fn() {
-        console.log('fn()')
-      }
-      const obj = { // 对象中的属性值表达式是在定义对象时执行的
-        m: fn(),
-        n: fn
-      }
-
-      console.log(obj.m) // 读取属性值时不会再执行属性值表达式
-      console.log(obj.m) // 读取属性值时不会再执行属性值表达式
-      obj.n()
-
-    </script>
   </body>
 </html>
