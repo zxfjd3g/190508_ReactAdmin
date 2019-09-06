@@ -4,23 +4,30 @@ reducer函数: 根据老的state和指定的action, 生成并返回一个新的s
 */
 import {combineReducers} from 'redux'
 
+import storageUtils from '../utils/storageUtils'
+
+import {
+  SET_HEADER_TITLE
+} from './action-types'
+
 /* 
-管理xxx状态数据的reduer函数
+管理头部标题状态数据的reducer函数
 */
-const initXxx = 2
-function xxx(state=initXxx, action) {
+const initHeaderTitle = '首页'
+function headerTitle(state=initHeaderTitle, action) {
   switch (action.type) {
-  
+    case SET_HEADER_TITLE:
+      return action.data
     default:
       return state
   }
 }
 
 /* 
-管理yyy状态数据的reduer函数
+管理登陆用户信息状态数据的reduer函数
 */
-const initYyy = {}
-function yyy(state=initYyy, action) {
+const initUser = storageUtils.getUser()
+function user(state=initUser, action) {
   switch (action.type) {
   
     default:
@@ -34,11 +41,11 @@ combineReducers(): 整合多个reducer返回一个总的reducer
   属性名: 返回这个数据的reducer的标识名称
   属性值: 对应的reducer执行返回的结果
   {
-    xxx: 2,
-    yyy: {}
+    headerTitle: '首页',
+    user: {}
   }
 */
 export default combineReducers({
-  xxx: xxx,
-  yyy: yyy
+  headerTitle,
+  user
 })

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 import { Modal } from 'antd'
+import {connect} from 'react-redux'
 
 import LinkButton from '../link-button'
 import { reqWeather } from '../../api'
@@ -88,9 +89,10 @@ class Header extends Component {
 
   render() {
     const {currentTime, dayPictureUrl, weather} = this.state
-    const {username} = memoryUtils.user
+    const {username} = this.props.user
 
-    const title = this.getTitle()
+    // const title = this.getTitle()
+    const title = this.props.headerTitle
 
     return (
       <div className="header">
@@ -111,4 +113,10 @@ class Header extends Component {
   }
 }
 
-export default withRouter(Header)
+export default withRouter(connect(
+  state => ({
+    headerTitle: state.headerTitle,
+    user: state.user
+  }),
+  {}
+)(Header))

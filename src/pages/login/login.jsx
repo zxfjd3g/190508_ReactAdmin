@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button, message } from 'antd'
 import {Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 
 import memoryUtils from '../../utils/memoryUtils'
 import storageUtils from '../../utils/storageUtils'
@@ -79,7 +80,7 @@ class Login extends Component {
 
   render() {
 
-    const user = memoryUtils.user
+    const user = this.props.user
     // 如果登陆
     if (user._id) {
       // 自动跳转到admin
@@ -162,7 +163,12 @@ class Login extends Component {
  */
 
 const WrappedLogin = Form.create()(Login)
-export default WrappedLogin
+export default connect(
+  state => ({
+    user: state.user
+  }),
+  {}
+)(WrappedLogin)
 
 /* 
 Form组件: 包含有<Form>的组件  ==> Login
