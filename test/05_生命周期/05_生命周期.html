@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>01_setState()的使用</title>
+</head>
+<body>
+
+<div id="example"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+<!-- 
+1. 新添加2个方法
+    static getDerivedStateFromProps()
+    getSnapshotBeforeUpdate()
+2. 准备删除的3个方法
+    componentWillMount()
+    componentWillUpdate()
+    componentWillReceiveProps()
+-->
+<script type="text/babel">
+
+  class LifeTest extends React.Component {
+    state = {
+      m1: 1
+    }
+
+    updateM1 = () => {
+      this.setState(state => ({ m1: state.m1 + 1 }))
+    }
+
+    render () {
+      return (
+        <div>
+          <button onClick={this.updateM1}>更新m1</button>
+          <h1>m1: {this.state.m1}</h1>
+          <hr/>
+          <OldLife m1={this.state.m1} />
+          <hr/>
+          <NewLife m1={this.state.m1} />
+        </div>
+      )
+    }
+  }
+
+  class OldLife extends React.Component {
+    
+    constructor (props) {
+      super(props)
+      console.log('OldLife constructor()')
+      this.state = {
+        m2: 1
+      }
+    }
+
+    updateM2 = () => {
+      this.setState(state => ({
+        m2: state.m2 + 1
+      }))
+    }
+
+    componentWillMount () {
+      console.log('OldLife componentWillMount()---')
+    }
+
+    componentDidMount () {
+      console.log('OldLife componentDidMount()')
+    }
+
+    componentWillUpdate () {
+      console.log('OldLife componentWillUpdate()---')
+    }
+
+    componentDidUpdate () {
+      console.log('OldLife componentDidUpdate()')
+    }
+
+    componentWillUnmount () {
+      console.log('OldLife componentWillUnmount()')
+    }
+
+
+    componentWillReceiveProps (nextProps) {
+      console.log('OldLife componentWillReceiveProps()---')
+    }
+
+    shouldComponentUpdate (nextProps, nextState) {
+      console.log('OldLife shouldComponentUpdate()', nextProps, nextState)
+      return true
+    }
+
+    render() {
+      console.log('OldLife render()')
+      return (
+        <div>
+          <button onClick={this.updateM2}>OldLife 更新m2</button>
+          <h2>m1: {this.props.m1}</h2>
+          <h2>m2: {this.state.m2}</h2>
+        </div>
+      )
+    }
+  }
+
+  class NewLife extends React.Component {
+    constructor (props) {
+      super(props)
+      console.log('NewLife constructor()')
+      this.state = {
+        m3: 1
+      }
+    }
+
+    updateM3 = () => {
+      this.setState(state => ({
+        m3: state.m3 + 1
+      }))
+    }
+
+    componentDidMount () {
+      console.log('NewLife componentDidMount()')
+    }
+
+    shouldComponentUpdate (nextProps, nextState) {
+      console.log('NewLife shouldComponentUpdate()', nextProps, nextState)
+      return true
+    }
+
+    componentDidUpdate () {
+      console.log('NewLife componentDidUpdate()')
+    }
+
+    componentWillUnmount () {
+      console.log('NewLife componentWillUnmount()')
+    }
+
+    getSnapshotBeforeUpdate (prevProps, prevState) {
+      console.log('NewLife getSnapshotBeforeUpdate()+++', prevProps, prevState)
+      return null
+    }
+
+    static getDerivedStateFromProps (props, state) {
+      console.log('NewLife getDerivedStateFromProps()+++', props, state)
+      if (props.m1 %3 === 1) {
+        return {
+          m3: state.m3 + 1
+        }
+      }
+
+      return null
+    }
+
+    render() {
+      console.log('NewLife render()')
+      return (
+        <div>
+          <button onClick={this.updateM3}>NewLife 更新m3</button>
+          <h3>m1: {this.props.m1}</h3>
+          <h3>m3: {this.state.m3}</h3>
+        </div>
+      )
+    }
+  }
+  
+
+  ReactDOM.render(<LifeTest/>, document.getElementById('example'))
+</script>
+</body>
+</html>
+
