@@ -14,7 +14,9 @@
     "react-draft-wysiwyg": "1.13.2",
     "draftjs-to-html": "0.8.4",
     "redux": "4.0.1",
-    "react-redux": "7.0.3"
+    "react-redux": "7.0.3",
+    "redux-thunk": "2.3.0",
+    "redux-devtools-extension": "2.13.8"
   },
   "devDependencies": {
     "react-app-rewired": "2.1.3",

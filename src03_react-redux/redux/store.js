@@ -1,13 +1,11 @@
 /* 
 redux最核心的管理对象: store
 */
-import { createStore, applyMiddleware} from 'redux'
-import {composeWithDevTools} from 'redux-devtools-extension'
-import thunk from 'redux-thunk'
+import { createStore } from 'redux'
 import reducer from './reducer'
 
 // 向外默认暴露store对象
-export default createStore(reducer, composeWithDevTools(applyMiddleware(thunk))) // 应用上redux的异步中间件
+export default createStore(reducer)
 
 /* 
 createStore(reducer)
