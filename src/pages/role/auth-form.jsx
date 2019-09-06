@@ -39,13 +39,16 @@ export default class AuthForm extends Component {
   根据菜单数据数组生成<TreeNode>的数组
   */
   getTreeNodes = (menuList) => {
-    return menuList.map(item => {
-      return (
-        <TreeNode title={item.title} key={item.key}>
-          {item.children ? this.getTreeNodes(item.children) : null}
-        </TreeNode>
-      )
-    })
+    return menuList.reduce((pre, item) => {
+      if (!item.isPublic) {
+        pre.push(
+          <TreeNode title={item.title} key={item.key}>
+            {item.children ? this.getTreeNodes(item.children) : null}
+          </TreeNode>
+        )
+      }
+      return pre
+    }, [])
   }
 
   handleCheck = (checkedKeys) => {

@@ -58,7 +58,7 @@ class LeftNav extends Component {
         } else { // 向pre中添加<SubMenu>
 
           // 请求的路由路径对应children中某个
-          if (item.children.some(item => item.key===path)) {
+          if (item.children.some(item => path.indexOf(item.key)===0)) {
             // 将item的key保存为openKey
             this.openKey = item.key
           }
@@ -139,7 +139,12 @@ class LeftNav extends Component {
     console.log('left-nav render()', this.props.location.pathname, this.openKey)
     const menuNodes = this.menuNodes
     // 读取当前请求的路由路径
-    const selectedKey = this.props.location.pathname
+    let selectedKey = this.props.location.pathname // /product/addupdate
+    console.log('selectedKey', selectedKey)
+    if (selectedKey.indexOf('/product/')===0) { // 在商品管理所有子路由时都选中商品管理
+      selectedKey = '/product' // 修正一下
+    }
+
     const openKey = this.openKey
 
     return (
