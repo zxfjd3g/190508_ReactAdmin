@@ -3,6 +3,7 @@ import { Form, Icon, Input, Button, message } from 'antd'
 import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 
+import {login} from '../../redux/actions'
 import memoryUtils from '../../utils/memoryUtils'
 import storageUtils from '../../utils/storageUtils'
 
@@ -29,25 +30,7 @@ class Login extends Component {
 
     form.validateFields(async (error, {username, password}) => {
       if (!error) { // 验证通过
-        // 发登陆的ajax
-        const result = await reqLogin(username, password)
-        // console.log('result', result)
-        if (result.status===0) { // 请求登陆成功
-          // 得到返回的用户信息对象
-          const user = result.data  // [object Object]
-
-          // 保存user (local/memory)
-          // localStorage.setItem('user_key', JSON.stringify(user))
-          storageUtils.saveUser(user)
-          memoryUtils.user = user
-
-          // 跳转到admin路由
-          this.props.history.replace('/')
-
-        } else { // 请求登陆失败
-          message.error(result.msg)
-        }
-        
+        this.props.login({username, password})
       } else {
         console.log('前台表单验证失败')
       }
@@ -96,6 +79,7 @@ class Login extends Component {
           <h1>后台管理系统</h1>
         </div>
         <div className="login-content">
+          {user.msg ? <div style={{color: 'red'}}>{user.msg}</div> : null}
           <h1>用户登陆</h1>
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Item>
@@ -167,7 +151,7 @@ export default connect(
   state => ({
     user: state.user
   }),
-  {}
+  {login}
 )(WrappedLogin)
 
 /* 

@@ -7,7 +7,10 @@ import {combineReducers} from 'redux'
 import storageUtils from '../utils/storageUtils'
 
 import {
-  SET_HEADER_TITLE
+  SET_HEADER_TITLE,
+  RECEIVE_USER,
+  SHOW_MSG,
+  LOGOUT
 } from './action-types'
 
 /* 
@@ -29,7 +32,12 @@ function headerTitle(state=initHeaderTitle, action) {
 const initUser = storageUtils.getUser()
 function user(state=initUser, action) {
   switch (action.type) {
-  
+    case RECEIVE_USER:
+      return action.user
+    case SHOW_MSG:
+        return {...state, msg: action.msg}
+    case LOGOUT:
+        return {msg: '请重新登陆'}
     default:
       return state
   }
