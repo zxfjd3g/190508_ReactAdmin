@@ -3,13 +3,14 @@
  */
 import React from 'react'
 import ReactDOM from 'react-dom'
+import {Provider} from 'react-redux'
+
 import store from './redux/store'
 
-import App from './App'
+import App from './containers/App'
 
-ReactDOM.render(<App store={store}/>, document.getElementById('root'))
-
-// 在store内部的状态数据发生改变时, 重新渲染<App>
-store.subscribe(() => {
-  ReactDOM.render(<App store={store}/>, document.getElementById('root'))
-})
+ReactDOM.render((
+  <Provider store={store}> {/* 内部向所有容器组件提供store */}
+    <App/>
+  </Provider>
+), document.getElementById('root'))
