@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>04_component_state</title>
+</head>
+<body>
+
+<div id="example"></div>
+
+<script type="text/javascript" src="./js/react.development.js"></script>
+<script type="text/javascript" src="./js/react-dom.development.js"></script>
+<script type="text/javascript" src="./js/babel.min.js"></script>
+
+<script type="text/babel">
+
+  /*
+  
+   */
+
+  // Context 可以让我们无须明确地传遍每一个组件，就能将值深入传递进组件树。
+  // 为当前的 theme 创建一个 context（“light”为默认值）。
+  const CountContext = React.createContext(0);
+  class A extends React.Component {
+
+    state = {
+      count: 1
+    }
+
+    test1 = () => {
+      this.setState(state => ({
+        count: state.count + 1
+      }))
+    }
+
+    render() {
+      console.log('A render()')
+      return (
+        <div>
+          <h1>A组件: count={this.state.count}</h1>
+          <button onClick={this.test1}>A 测试1</button>
+          <hr/>
+          <CountContext.Provider value={this.state.count}>
+            <B/>
+          </CountContext.Provider>
+        </div>
+      )
+    }
+  }
+
+  function B(props) {
+    return (
+      <div>
+        <h1>B组件</h1>
+        <hr/>
+        <C/>  
+        <D/>  
+      </div>
+    )
+  }
+
+  function C () {
+    return (
+      <CountContext.Consumer>
+        {
+          count => <h1>C组件: count={count}</h1>
+        }
+      </CountContext.Consumer>
+    )
+  }
+
+  class D extends React.Component {
+    // 指定 contextType 读取当前的 Count context。
+    // React 会往上找到最近的 Count Provider，然后使用它的值。
+    // 在这个例子中，当前的 Count 值为 1
+    static contextType = CountContext
+    render() {
+      return <h1>D组件: count={this.context}</h1>
+    }
+  }
+
+  ReactDOM.render(<A/>, document.getElementById('example'))
+
+</script>
+</body>
+</html>
+

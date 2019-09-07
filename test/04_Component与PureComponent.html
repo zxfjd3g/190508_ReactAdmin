@@ -43,12 +43,22 @@
     state = {
       m1: {
         count: 1
-      }
+      },
+      n1: 1
     }
 
     test1 = () => {
+      /* this.setState({ 
+        n1: 2
+      }) */
+     /*  this.setState({
+        m1: {count: 1}
+      }) */
+      
+      const m1 = this.state.m1
+      m1.count = 2
       this.setState({
-        // m1: {count: 2}
+        m1
       })
     }
 
@@ -58,13 +68,14 @@
         <div>
           <h1>A组件: m1.count={this.state.m1.count}</h1>
           <button onClick={this.test1}>A 测试1</button>
+          <hr/>
           <B m1={this.state.m1}/>
         </div>
       )
     }
   }
 
-  class B extends React.PureComponent {
+  class B extends React.Component {
     state = {
       m2: {
         count: 2
@@ -72,23 +83,23 @@
     }
 
     test1 = () => {
-      /* this.setState({
+      this.setState({
         m2: {count: 2}
-      }) */
-      var m2 = this.state.m2
-      // m2.count = 3
-      this.setState(state => ({
-        m2: {...state.m2, count: 3}
-      }))
+      })
     }
 
-    /* shouldComponentUpdate (nextProps, nextState) {
+    
+    shouldComponentUpdate (nextProps, nextState) {
+      console.log('shouldComponentUpdate()')
+      // 对新旧的props和state数据进行浅比较, 如果都没有变化, 返回false, 否则返回true
       if (nextProps.m1===this.props.m1 && nextState.m2===this.state.m2) {
-        return false // 不会进入更新流程
-      } else {
-        return true // 会进入更新流程
+        return false
       }
-    } */
+      return true
+
+      // return false // setState({})/父组件重新render()都不会重新render()
+      // return true // 默认是true ===> setState({})/父组件重新render(), 当前组件都会重新render()
+    }
 
     render() {
       console.log('B render()')
