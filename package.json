@@ -12,7 +12,9 @@
     "store": "2.0.12",
     "jsonp": "0.2.1",
     "react-draft-wysiwyg": "1.13.2",
-    "draftjs-to-html": "0.8.4"
+    "draftjs-to-html": "0.8.4",
+    "echarts": "4.2.1",
+    "echarts-for-react": "2.0.15-beta.0"
   },
   "devDependencies": {
     "react-app-rewired": "2.1.3",
