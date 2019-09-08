@@ -10,7 +10,7 @@ import qs from 'qs'
 import {message} from 'antd'
 
 // 指定基础url: 后台应用的url
-// axios.defaults.baseURL = 'http://localhost:5000'
+axios.defaults.baseURL = process.env.NODE_ENV==='product' ? '/react_api' : ''
 
 // 使用请求拦截器
 axios.interceptors.request.use((config) => {

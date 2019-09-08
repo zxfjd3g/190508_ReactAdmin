@@ -2,6 +2,10 @@
 	什么?: redux是专门做状态管理的独立第3方库, 不是react插件, 但一般都用在react项目中
 	作用?: 对应用中状态进行集中式的管理(写/读)
 	开发: 与react-redux, redux-thunk等插件配合使用
+	3大原则:
+			单一数据源
+			状态不可变
+			纯函数产生新状态
 
 # 2. redux相关API
 	redux中包含: createStore(), applyMiddleware(), combineReducers()  

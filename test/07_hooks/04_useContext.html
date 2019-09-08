@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>useContext</title>
+</head>
+<body>
+
+<div id="example"></div>
+<div id="example2"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+
+<script type="text/babel">
+
+  /*
+  
+   */
+
+  // Context 可以让我们无须明确地传遍每一个组件，就能将值深入传递进组件树。
+  // 为当前的 theme 创建一个 context（“light”为默认值）。
+  const CountContext = React.createContext(0);
+
+  function A () {
+    const [count, setCount] = React.useState(1)
+
+    function test1() {
+      setCount(count => count + 1)
+    }
+
+    return (
+      <div>
+        <h1>A组件: count={count}</h1>
+        <button onClick={test1}>A 测试1</button>
+        <hr/>
+        <CountContext.Provider value={count}>
+          <B/>
+        </CountContext.Provider>
+      </div>
+    )
+  }
+
+  
+
+  function B() {
+    return (
+      <div>
+        <h1>B组件</h1>
+        <hr/>
+        <C/>  
+      </div>
+    )
+  }
+
+  function C () {
+    const count = React.useContext(CountContext)
+    return (
+      <h1>C组件: count={count}</h1>
+    )
+  }
+
+  ReactDOM.render(<A/>, document.getElementById('example'))
+
+</script>
+</body>
+</html>
+

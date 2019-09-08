@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>rule</title>
+</head>
+<body>
+
+<div id="example"></div>
+<div id="example2"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+
+<script type="text/babel">
+  function Test () {
+    // 1. Use the name state variable
+    const [name, setName] = React.useState('Mary');
+
+    // 2. Use an effect for persisting the form
+    React.useEffect(function persistForm() {
+      localStorage.setItem('name_key', name);
+    });
+
+    // 3. Use the age state variable
+    const [age, setAge] = React.useState(1);
+
+    // 4. Use an effect for updating the title
+    // if (age < 4) { // 不能将hooks的use方法放在条件语句中
+      React.useEffect(function updateTitle() {
+        if (age < 4) { // 可以在回调函数中做条件判断
+          document.title = age;
+        }
+      });
+    // }
+
+    function update () {
+      setAge(age => age + 1)
+    }
+
+    return (
+      <div>
+        <h2>我叫{name}, 年方{age}</h2>
+        <button onClick={update}>更新</button>
+      </div>
+    )
+  }
+  /* 
+// ------------
+// 首次渲染
+// ------------
+useState('Mary')           // 1. 使用 'Mary' 初始化变量名为 name 的 state
+useEffect(persistForm)     // 2. 添加 effect 以保存 form 操作
+useState('Poppins')        // 3. 使用 'Poppins' 初始化变量名为 surname 的 state
+useEffect(updateTitle)     // 4. 添加 effect 以更新标题
+
+// -------------
+// 二次渲染
+// -------------
+useState('Mary')           // 1. 读取变量名为 name 的 state（参数被忽略）
+useEffect(persistForm)     // 2. 替换保存 form 的 effect
+useState('Poppins')        // 3. 读取变量名为 surname 的 state（参数被忽略）
+useEffect(updateTitle)     // 4. 替换更新标题的 effect
+
+// ...
+   */
+
+  ReactDOM.render(<Test/>, document.getElementById('example'))
+</script>
+</body>
+</html>
+

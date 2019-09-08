@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>01_setState()的使用</title>
+  <title>新旧生命周期比较</title>
 </head>
 <body>
 
@@ -108,8 +108,13 @@
     constructor (props) {
       super(props)
       console.log('NewLife constructor()')
+      const list = []
+      while(list.length<50) {
+        list.push(list.length)
+      }
       this.state = {
-        m3: 1
+        m3: 1,
+        list
       }
     }
 
@@ -128,7 +133,7 @@
       return true
     }
 
-    componentDidUpdate () {
+    componentDidUpdate (prevProps, prevState, snapshot) {
       console.log('NewLife componentDidUpdate()')
     }
 
@@ -152,6 +157,12 @@
       return null
     }
 
+    add = () => {
+      this.setState(state => ({
+        list: [...[1, 1, 1, 1, 1, 1, 1, 1], ...state.list]
+      }))
+    }
+
     render() {
       console.log('NewLife render()')
       return (
@@ -159,8 +170,53 @@
           <button onClick={this.updateM3}>NewLife 更新m3</button>
           <h3>m1: {this.props.m1}</h3>
           <h3>m3: {this.state.m3}</h3>
+
+          <hr/>
+          <button onClick={this.add}>添加</button>
+          <ScrollingList list={this.state.list}/>
         </div>
       )
+    }
+  }
+
+  class ScrollingList extends React.Component {
+    // props list array
+
+    listRef = React.createRef();
+
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+      // 我们是否在 list 中添加新的 items ？
+      // 捕获滚动​​位置以便我们稍后调整滚动位置。
+      if (prevProps.list.length < this.props.list.length) {
+        const list = this.listRef.current;
+        console.log('getSnapshotBeforeUpdate', list.scrollHeight, list.scrollTop, list.scrollHeight - list.scrollTop)
+        return list.scrollHeight - list.scrollTop;
+      }
+      return null;
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+      // 如果我们 snapshot 有值，说明我们刚刚添加了新的 items，
+      // 调整滚动位置使得这些新 items 不会将旧的 items 推出视图。
+      //（这里的 snapshot 是 getSnapshotBeforeUpdate 的返回值）
+      if (snapshot !== null) {
+        const list = this.listRef.current;
+        console.log('componentDidUpdate', list.scrollHeight, list.scrollTop)
+        list.scrollTop = list.scrollHeight - snapshot;
+        console.log('componentDidUpdate', list.scrollHeight, list.scrollTop)
+      }
+    }
+
+    render() {
+      return (
+        <div ref={this.listRef} style={{height: 300, overflowY: 'scroll'}}>
+          <ul>
+            {
+              this.props.list.map((item, index) => <li key={index}>{item}</li>)
+            }
+          </ul> 
+        </div>
+      );
     }
   }
   

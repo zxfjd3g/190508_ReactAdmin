@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>useState</title>
+</head>
+<body>
+
+<div id="example1"></div>
+<hr/>
+<div id="example2"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+<script type="text/babel">
+
+  class ClassCounter extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        count: 0
+      };
+    }
+
+    render() {
+      return (
+        <div>
+          <p>You clicked {this.state.count} times</p>
+          <button onClick={() => this.setState({ count: this.state.count + 1 })}>
+            Click me
+          </button>
+        </div>
+      );
+    }
+  }
+
+  function Counter () {
+
+    /* 
+    声明一个新的叫做 “count” 的 state 变量
+    声明一个用于更新count的函数
+     */
+    const [count, setCount]  = React.useState(0)
+    const [name, setMyName]  = React.useState('atguigu')
+
+    return (
+      <div>
+        <p>You clicked {count} times</p>
+        <p>My name is {name}</p>
+        <button onClick={() => {
+            setCount(count + 1)
+            setMyName(name + '-')
+        }}>
+          Click me
+        </button>
+      </div>
+    )
+  }
+
+  ReactDOM.render(<ClassCounter/>, document.getElementById('example1'))
+  ReactDOM.render(<Counter/>, document.getElementById('example2'))
+</script>
+</body>
+</html>
+

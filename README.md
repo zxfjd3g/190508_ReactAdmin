@@ -440,3 +440,106 @@
         b. 如果当前item是公开的
         c. 当前用户有此item的权限: key有没有menus中
         d. 如果当前用户有此item的某个子item的权限
+
+# day07
+## 1. 项目404界面
+    <Redirect from='/' to='/home' exact/>
+    <Route component={NotFound}/>
+
+## 2. 解决生产环境打包运行的问题
+    1). 解决生产环境ajax请求跨域问题
+        a.说明: 如果客户端应用打包后与后台应用分开独立运行, 就存在ajax跨域请求问题
+        b.解决: 配置代理服务器, 比如: nginx
+            axios.defaults.baseURL = process.env.NODE_ENV==='product' ? '/react_api' : ''
+
+            # 指向前台应用打包后文件位置
+            location / {
+                root D:\work\190418\video\day07\online\admin_browser; # 前台应用的根路径
+                index index.html; # 默认index页面
+            }
+
+            # 配置react项目的后台接口
+            location /react_api/ {
+                proxy_pass http://127.0.0.1:5000/;
+            }
+
+    2). 解决BrowserRouter 刷新404问题
+        a. 问题: 刷新某个路由路径时, 会出现404的错误
+        b. 原因: 项目根路径后的path路径会被当作后台路由路径, 去请求对应的后台路由, 但没有
+        c. 解决: 让所有对前台应用的请求都返回index页面
+            try_files $uri $uri/ /index.html; # 总是返回首页
+
+
+## 3. setState()的使用
+    1). setState(updater, [callback]),
+        updater为返回stateChange对象的函数: (state, props) => stateChange
+        接收的state和props被保证为最新的
+    2). setState(stateChange, [callback])
+        stateChange为对象,
+        callback是可选的回调函数, 在状态更新且界面更新后才执行
+    3). 总结:
+        对象方式是函数方式的简写方式
+            如果新状态不依赖于原状态 ===> 使用对象方式
+            如果新状态依赖于原状态 ===> 使用函数方式
+        如果需要在setState()后获取最新的状态数据, 在第二个callback函数中读取
+
+## 4. setState()的异步与同步
+    1). setState()更新状态是异步还是同步的?
+        a. 执行setState()的位置?
+            在react控制的回调函数中: 生命周期勾子 / react事件监听回调
+            非react控制的异步回调函数中: 定时器回调 / 原生事件监听回调 / promise回调 /...
+        b. 异步 OR 同步?
+            react相关回调中: 异步
+            其它异步回调中: 同步
+    
+    2). 关于异步的setState()
+        a. 多次调用, 如何处理?
+            setState({}): 合并更新一次状态, 只调用一次render()更新界面 ---状态更新和界面更新都合并了
+            setState(fn): 更新多次状态, 但只调用一次render()更新界面  ---状态更新没有合并, 但界面更新合并了
+        b. 如何得到异步更新后的状态数据?
+            在setState()的callback回调函数中
+
+## 5. Component与PureComponent
+    1). Component存在的问题?
+        a. 父组件重新render(), 当前组件也会重新执行render(), 即使没有任何变化
+        b. 当前组件setState(), 重新执行render(), 即使state没有任何变化
+      
+    2). 解决Component存在的问题
+        a. 原因: 组件的shouldcomponentUpdate()默认返回true, 即使数据没有变化render()都会重新执行
+        b. 办法1: 重写shouldComponentUpdate(), 判断如果数据有变化返回true, 否则返回false
+        c. 办法2: 使用PureComponent代替Component
+        d. 说明: 一般都使用PureComponent来优化组件性能
+      
+    3). PureComponent的基本原理
+        a. 重写实现shouldComponentUpdate()
+        b. 对组件的新/旧state和props中的数据进行浅比较, 如果都没有变化, 返回false, 否则返回true
+        c. 一旦componentShouldUpdate()返回false不再执行用于更新的render()
+      
+    4). 面试题:
+        组件的哪个生命周期勾子能实现组件优化?
+        PureComponent的原理?
+        区别Component与PureComponent?
+
+## 6. Context技术
+    1). Context是React组件直接向任意后代组件直接通信的技术
+    2). 相关语法:
+        a. 创建Context对象, 并指定其默认值
+            const MyContext = React.createContext(defaultValue)
+        b. 给Context对象的Provider组件标签指定要传递的value值, 并包裹子标签
+            <MyContext.Provider value={/* 某个值 */}>子组件</MyContext.Provider>
+        c. 在任意后代组件中读取Context对象中的value值
+            方式一: 
+                <Context.Consumer>
+                    {value => /* 基于 context 值进行渲染*/}
+                </Context.Consumer>
+            方式二:
+                static contextType = MyContext; let value = this.context;
+
+## 7. class组件对象的生命周期
+    1). 新添加2个方法
+        static getDerivedStateFromProps()
+        getSnapshotBeforeUpdate()
+    2). 准备删除的3个方法
+        componentWillMount()
+        componentWillUpdate()
+        componentWillReceiveProps()

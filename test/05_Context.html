@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>04_component_state</title>
+  <title>Context</title>
 </head>
 <body>
 
@@ -14,12 +14,11 @@
 
 <script type="text/babel">
 
-  /*
-  
-   */
+/* 
+Context是React组件直接向任意后代组件直接通信的技术
+*/
 
-  // Context 可以让我们无须明确地传遍每一个组件，就能将值深入传递进组件树。
-  // 为当前的 theme 创建一个 context（“light”为默认值）。
+
   const CountContext = React.createContext(0);
   class A extends React.Component {
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>useEffect</title>
+</head>
+<body>
+
+<div id="example"></div>
+<div id="example2"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+
+<script type="text/babel">
+  /* 
+    需求1: 在浏览器容器标题上显示最新的count值
+  */
+  function Example() {
+    const [count, setCount] = React.useState(0);
+
+    // 相当于 componentDidMount 和 componentDidUpdate:
+    React.useEffect(() => {
+      document.title = `${count} times`
+    })
+
+    return (
+      <div>
+        <p>You clicked {count} times</p>
+        <button onClick={() => setCount(count + 1)}>
+          Click me
+        </button>
+      </div>
+    );
+  }
+
+  /*  
+    需要2: 每隔1S自动增加2
+  */
+  function Example2() {
+    const [count, setCount] = React.useState(0);
+
+    React.useEffect(() => {
+      console.log('useEffect callback()')
+      const intervalId = setInterval(() => {
+        console.log('------')
+        setCount(count => count + 2)
+      }, 1000);
+      return () => {
+        console.log('useEffect callback return callback()')
+        clearInterval(intervalId)
+      }
+    }, [])
+
+    return (
+      <div>
+        <p>You clicked {count} times</p>
+        <button onClick={() => ReactDOM.unmountComponentAtNode(document.getElementById('example2'))}>卸载组件</button>
+      </div>
+    );
+  }
+
+  ReactDOM.render(<Example/>, document.getElementById('example'))
+  ReactDOM.render(<Example2/>, document.getElementById('example2'))
+</script>
+</body>
+</html>
+

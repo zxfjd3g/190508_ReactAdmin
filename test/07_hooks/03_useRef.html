@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>useRef</title>
+</head>
+<body>
+
+<div id="example"></div>
+<div id="example2"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+
+
+<script type="text/babel">
+
+  /*
+  
+   */
+  function A () {
+    const [count, setCount] = React.useState(1)
+
+    // 创建或读取一个ref容器, current初始值为null
+    const h1Ref = React.useRef(null)
+    const numberRef = React.useRef(-1)
+
+    function test1() {
+      setCount(count => count + 1)
+    }
+    function test2() {
+      alert(h1Ref.current.innerHTML)
+    }
+    function test3() {
+      numberRef.current = Date.now()
+      console.log('记录时间: ', numberRef.current)
+    }
+    function test4() {
+      console.log('前面记录的时间为: ', numberRef.current)
+    }
+
+    return (
+      <div>
+        <h1 ref={h1Ref}>A组件: count={count}</h1>
+        <button onClick={test1}>更新</button><br/>
+        <button onClick={test2}>提示</button><br/>
+        <button onClick={test3}>记录时间</button>
+        <button onClick={test4}>读取记录的时间</button>
+      </div>
+    )
+  }
+
+  ReactDOM.render(<A/>, document.getElementById('example'))
+
+</script>
+</body>
+</html>
+
