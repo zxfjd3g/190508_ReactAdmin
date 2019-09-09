@@ -41,7 +41,7 @@
         componentWillUnmount() 
 
 ## 5. Ref Hook
-    1). Ref Hook可以在函数中组件中存储/查找组件内的标签或任意其它数据
+    1). Ref Hook可以在函数组件中存储/查找组件内的标签或任意其它数据
     2). 语法: const refContainer = useRef(initialValue)
     3). 作用:
         保存标签对象: 功能与React.createRef()一样
@@ -49,7 +49,11 @@
             保存: refContainer.xxx = value
             读取: refContainer.xxx
 
-## 6. Hook 规则
+## 6. Context Hook
+    1). Context Hook可以在函数组件中读取到保存在Context对象中的value值数据
+    2). 语法: const value = useContext(MyContext)
+
+## 7. Hook 规则
     1). 只在函数组件的最顶层使用 Hook
     2). 不要在循环，条件或嵌套函数中调用 Hook
     3). 必须保证使用hook的顺序与个数总是不变的
