@@ -124,6 +124,12 @@
       }))
     }
 
+    add = () => {
+      this.setState(state => ({
+        list: [...[1, 1, 1, 1, 1, 1, 1, 1], ...state.list]
+      }))
+    }
+
     componentDidMount () {
       console.log('NewLife componentDidMount()')
     }
@@ -141,13 +147,8 @@
       console.log('NewLife componentWillUnmount()')
     }
 
-    getSnapshotBeforeUpdate (prevProps, prevState) {
-      console.log('NewLife getSnapshotBeforeUpdate()+++', prevProps, prevState)
-      return null
-    }
-
     static getDerivedStateFromProps (props, state) {
-      console.log('NewLife getDerivedStateFromProps()+++', props, state)
+      console.log('NewLife getDerivedStateFromProps()+++', props.m1, state.m3)
       if (props.m1 %3 === 1) {
         return {
           m3: state.m3 + 1
@@ -157,10 +158,9 @@
       return null
     }
 
-    add = () => {
-      this.setState(state => ({
-        list: [...[1, 1, 1, 1, 1, 1, 1, 1], ...state.list]
-      }))
+    getSnapshotBeforeUpdate (prevProps, prevState) {
+      console.log('NewLife getSnapshotBeforeUpdate()+++', prevProps, prevState)
+      return null
     }
 
     render() {

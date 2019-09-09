@@ -18,8 +18,8 @@
 Context是React组件直接向任意后代组件直接通信的技术
 */
 
-
-  const CountContext = React.createContext(0);
+  // 1. 创建一个Context对象, 指定内部包含默认数据值
+  const StoreContext = React.createContext(0)
   class A extends React.Component {
 
     state = {
@@ -39,15 +39,15 @@ Context是React组件直接向任意后代组件直接通信的技术
           <h1>A组件: count={this.state.count}</h1>
           <button onClick={this.test1}>A 测试1</button>
           <hr/>
-          <CountContext.Provider value={this.state.count}>
+          <StoreContext.Provider value={this.state.count}>
             <B/>
-          </CountContext.Provider>
+          </StoreContext.Provider>
         </div>
       )
     }
   }
 
-  function B(props) {
+  function B() {
     return (
       <div>
         <h1>B组件</h1>
@@ -59,20 +59,19 @@ Context是React组件直接向任意后代组件直接通信的技术
   }
 
   function C () {
+
     return (
-      <CountContext.Consumer>
-        {
-          count => <h1>C组件: count={count}</h1>
-        }
-      </CountContext.Consumer>
+      <StoreContext.Consumer>
+        {count => <h1>C组件: count={count}</h1>}
+      </StoreContext.Consumer>
     )
   }
 
   class D extends React.Component {
-    // 指定 contextType 读取当前的 Count context。
-    // React 会往上找到最近的 Count Provider，然后使用它的值。
-    // 在这个例子中，当前的 Count 值为 1
-    static contextType = CountContext
+    // 定义一个静态的contextType属性, 值是Context对象
+    // this.context的值就为Context对象中的value值
+    static contextType = StoreContext;
+
     render() {
       return <h1>D组件: count={this.context}</h1>
     }
