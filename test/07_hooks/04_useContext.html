@@ -56,7 +56,9 @@
   }
 
   function C () {
+    // 执行返回的是context对象内部保存value值
     const count = React.useContext(CountContext)
+
     return (
       <h1>C组件: count={count}</h1>
     )
