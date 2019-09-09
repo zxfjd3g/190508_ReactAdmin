@@ -23,9 +23,12 @@
 
     // 相当于 componentDidMount 和 componentDidUpdate:
     React.useEffect(() => {
-      document.title = `${count} times`
+      console.log('useEffect callback()', count)
+      // 在此执行带副作用的操作
+      document.title = count
     })
 
+    console.log('Example()')
     return (
       <div>
         <p>You clicked {count} times</p>
@@ -43,16 +46,17 @@
     const [count, setCount] = React.useState(0);
 
     React.useEffect(() => {
-      console.log('useEffect callback()')
+      console.log('useEffect callback()', count)
+      // 在此执行带副作用的操作
       const intervalId = setInterval(() => {
-        console.log('------')
+        console.log('----')
         setCount(count => count + 2)
       }, 1000);
-      return () => {
-        console.log('useEffect callback return callback()')
+
+      return () => { // 组件卸载前调用
         clearInterval(intervalId)
       }
-    }, [])
+    }, [])  // 状态更新后不会执行回调, 只在第一次更新界面后调用
 
     return (
       <div>

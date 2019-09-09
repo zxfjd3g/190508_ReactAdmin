@@ -37,26 +37,26 @@
   }
 
   function Counter () {
+    
+    const [count, setCount] = React.useState(1) // 返回一个数组, 第一个元素是状态数据值, 第一个设置新的状态数据的函数
+    var [name, setName] = React.useState('atguigu')
 
-    /* 
-    声明一个新的叫做 “count” 的 state 变量
-    声明一个用于更新count的函数
-     */
-    const [count, setCount]  = React.useState(0)
-    const [name, setMyName]  = React.useState('atguigu')
 
-    return (
-      <div>
-        <p>You clicked {count} times</p>
-        <p>My name is {name}</p>
-        <button onClick={() => {
-            setCount(count + 1)
-            setMyName(name + '-')
-        }}>
-          Click me
-        </button>
-      </div>
-    )
+    console.log('Counter', count)
+    return  (
+        <div>
+          <p>You clicked {count} times</p>
+          <p>my Name is {name}</p>
+          <button 
+            onClick={() => {
+              setCount(count + 1)
+              setName(name => name + '-')
+            }}
+          >
+            Click me
+          </button>
+        </div>
+      );
   }
 
   ReactDOM.render(<ClassCounter/>, document.getElementById('example1'))
