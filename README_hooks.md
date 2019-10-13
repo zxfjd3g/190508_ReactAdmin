@@ -9,7 +9,7 @@
 
 ## 3. State Hook
     1). State Hook让函数组件也可以有state状态, 并进行状态数据的读写操作
-    2). 语法: const [xxx, setXxx] = React.useState(initValue) 
+    2). 语法: const [xxx, setXxx] = React.useState(initValue)  
     3). useState说明:
         参数: 第一次作为初始状态值在内部作缓存
         返回: 2个元素的数组, 第1个为内部当前状态值, 第2个为设置/保存新状态值的函数
@@ -30,7 +30,7 @@
         useEffect(() => { // 在每次render()后执行
           // 在此可以执行任何带副作用操作
           
-          return () { // 在组件卸载前执行
+          return () => { // 在组件卸载前执行
             // 在此做一些收尾工作, 比如清除定时器/取消订阅等
           }
         }, [stateValue]) // 如果指定的是[], 回调函数只会在第一render()后执行
